@@ -1,13 +1,18 @@
+__author__ = 'Pradyumn Vikram'
+
+# some imports
 import pygame
 import random
 
-
+# setting screen dimesnions and declaring variables
 pygame.font.init()
 
 WIDTH, HEIGHT = 650, 700
 
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('Ping-Pong')
+
+# player class
 
 
 class Pad():
@@ -36,6 +41,8 @@ def collide(obj1, obj2):
     if obj1.rect.colliderect(obj2.circle_rect):
         return True
 
+# ping-pong ball class
+
 
 class Ball():
     def __init__(self, dx, dy):
@@ -49,11 +56,14 @@ class Ball():
                                               (self.dx, self.dy), 20)
 
     def move(self, player1, player2):
+        # moving ball
         self.dx += self.ball_vel[0]
         self.dy += self.ball_vel[1]
+        # moving in opposite direction if any wall is hit and reducing respective player points
         if self.dx >= WIDTH - 10:
             if player2.points > 0:
                 player2.points -= 1
+
             self.ball_vel[0] = -self.ball_vel[0]
         if self.dx <= 10:
             if player1.points > 0:
@@ -68,13 +78,17 @@ class Ball():
         self.ball_vel[0] = -self.ball_vel[0]
         self.ball_vel[1] += random.randint(-8, 8)
 
+# the main loop
+
 
 def main():
+    # some variables
     run = True
     FPS = 60
     clock = pygame.time.Clock()
 
     main_font = pygame.font.SysFont('comicsans', 50)
+    # function to redraw window every frame
 
     def redraw_window():
         WIN.fill((0, 0, 0))
@@ -86,7 +100,7 @@ def main():
         point_p2 = main_font.render(f'{p2.points}', 1, (255, 255, 255))
 
         WIN.blit(point_p2, (WIDTH - point_p1.get_width() - 15, 10))
-
+        # checking for collisions
         if collide(p1, ball):
             ball.rebound()
             p1.points += 1
@@ -120,6 +134,8 @@ def main():
         p1.move(player_vel, [pygame.K_w, pygame.K_s])
         p2.move(player_vel, [pygame.K_UP, pygame.K_DOWN])
         ball.move(p1, p2)
+
+# creating the main menu
 
 
 def main_menu():
